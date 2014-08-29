@@ -15,6 +15,7 @@ import br.com.truefriends.service.UsuarioServico;
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.types.Post;
 import com.restfb.types.User;
 
 
@@ -35,11 +36,17 @@ public class RecuperaUsuarioFacebook extends HttpServlet {
 	   FacebookClient facebookCliente = new DefaultFacebookClient(request.getParameter("token"));
 	   User facebookUser = facebookCliente.fetchObject("me", User.class);
 	   Connection<User> friendsFB = facebookCliente.fetchConnection("me/friends", User.class);
+	   Connection<Post> myPostsFB = facebookCliente.fetchConnection("me/posts", Post.class);
 	   
 	   String friendsName = "";
 	   for (int i=0;i < friendsFB.getData().size(); i++) {
 		  friendsName = friendsName + friendsFB.getData().get(i).getName() + "<br />";
 	   }
+	   
+	   String postsString = "";
+	   //for (int i=0;i < myPostsFB.getData().size(); i++) {
+		   postsString += myPostsFB.getData().get(0).getLink();
+	   //}
 	   
 	   Usuario usuario = new Usuario();
 	   
@@ -52,6 +59,7 @@ public class RecuperaUsuarioFacebook extends HttpServlet {
 	   request.setAttribute("email_usuario", usuario.getEmail());
 	   request.setAttribute("dtnasc_usuario", usuario.getDataNascimento());
 	   request.setAttribute("friendsNames", friendsName);
+	   request.setAttribute("myPosts", postsString);
 	   
 	   RequestDispatcher rd = request.getRequestDispatcher("/results.jsp");  
 	   rd.forward(request,response);  

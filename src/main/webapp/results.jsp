@@ -10,6 +10,7 @@
 			out.println("Email: " + request.getAttribute("email_usuario") + "<br />");
 			out.println("Data de nascimento: " + request.getAttribute("dtnasc_usuario") + "<br />");
 			out.println("Friends: <br />" + request.getAttribute("friendsNames") + "<br />");
+			out.println("Posts: <br /><a href=\"" + request.getAttribute("myPosts") + "\" >Post</a><br />");
 		%>
 	</body>
 </html>
