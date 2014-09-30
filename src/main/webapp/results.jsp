@@ -9,8 +9,9 @@
 			out.println("Nome: " + request.getAttribute("nome_usuario") + "<br />");
 			out.println("Email: " + request.getAttribute("email_usuario") + "<br />");
 			out.println("Data de nascimento: " + request.getAttribute("dtnasc_usuario") + "<br />");
-			out.println("Friends: <br />" + request.getAttribute("friendsNames") + "<br />");
-			out.println("Posts: <br /><a href=\"" + request.getAttribute("myPosts") + "\" >Post</a><br />");
+			out.println("Number of friends: " + request.getAttribute("friendsCount") + "<br />");
+			//out.println("Friends: <br />" + request.getAttribute("friendsNames") + "<br />");
+			out.println("Posts: <br />" + request.getAttribute("myPosts") + "<br />");
 		%>
 	</body>
 </html>
