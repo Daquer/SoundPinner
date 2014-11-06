@@ -1,18 +1,18 @@
 <head>
 <html>
-<body>
+<body onload="entra()">
 
 <div id="fb-root"></div>
 
 
-<a href="#" onclick="entra()">
-<img src="imagem/download.jpg" />
-</a>
+<!--a href="#" onclick="entra()">
+< img src="imagem/download.jpg" />
+</a-->
 <script src="http://connect.facebook.net/pt_BR/all.js"></script>
 <script>
         
  FB.init({
-	  appId  : '225035440988717',
+	  appId  : '749336888463283',
 	  status : true, // verifica status do login
 	  cookie : true, // habilita cookies para permitir acesso via servidor
 	  xfbml  : true  // habilita parser XFBML
@@ -20,7 +20,11 @@
 
 
 	 function entra() {
-		    FB.getLoginStatus(function(response) {
+		 /*FB.login(function(response) {
+			alert(response.status);
+		 }, {scope: 'email,user_likes,user_actions.fitness'} );*/   
+		 
+		 FB.getLoginStatus(function(response) {
 		        if (response.status === 'connected') {
 		        	
 		        	var token = response.authResponse.accessToken;
@@ -47,7 +51,7 @@
 		            
 		          });
 		         }
-		    });
+		 });
 	 }; 
 		        	           
 	
