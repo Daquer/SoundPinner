@@ -1,8 +1,6 @@
 package br.com.truefriends.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,16 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.com.truefriends.modelo.Usuario;
-import br.com.truefriends.service.UsuarioServico;
-
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
-import com.restfb.json.JsonArray;
-import com.restfb.json.JsonObject;
-import com.restfb.types.FacebookType;
 import com.restfb.types.Post;
 import com.restfb.types.User;
 
@@ -49,13 +41,15 @@ public class RecuperaUsuarioFacebook extends HttpServlet {
 	   String[] profPicUrls = new String[friendsFB.getData().size()];
 		  
 	   for (int i=0;i < friendsFB.getData().size(); i++) {
-		  String nome = friendsFB.getData().get(i).getName();
+		  //String nome = friendsFB.getData().get(i).getName();
 		  String id = friendsFB.getData().get(i).getId();
 		  profPicUrls[i] = friendsFB.getData().get(i).getPicture() != null ? friendsFB.getData().get(i).getPicture().getUrl() : "imagem/401.png" ;
 		  
+		 
+		  
 		  //JsonObject runsConnection = facebookClient.fetchObject(id + "/fitness.runs", JsonObject.class);
-		  Connection<Post> runsConnection = facebookClient.fetchConnection(id + "/fitness.runs", Post.class, Parameter.with("limit", "999"));
-		 /* if (runsConnection.getJsonArray("data").length() != 0 ) {
+		  
+		  /*if (runsConnection.getJsonArray("data").length() != 0 ) {
 			  for(int j=0;j < runsConnection.getJsonArray("data").length(); j++) {
 				  
 				  for(int k=0;k < runsConnection.getJsonArray("data").getJsonObject(j).names().length();k++) {
@@ -70,22 +64,8 @@ public class RecuperaUsuarioFacebook extends HttpServlet {
 //				  }
 			  }
 		  }*/
-
-		  friendsRuns = nome + " " + id + " " + "<br />";
 	   }
 //	   runsJson = runsJson + "]}";
-	   
-//	   JsonObject allFitJson = new JsonObject(runsJson);
-	   
-	   String postsString = "";
-	  
-//		   for (int i=0;i < myPostsFB.getData().size(); i++) {
-//			   NamedFacebookType appPost = myPostsFB.getData().get(i).getApplication();
-//			   if(appPost != null) {
-//				   postsString += appPost.getName() + " " + myPostsFB.getData().get(i).getSource() + "<br />";
-//			   }
-//		   }
-
 	   
 //	   Usuario usuario = new Usuario();
 //	   
@@ -102,7 +82,7 @@ public class RecuperaUsuarioFacebook extends HttpServlet {
 	   request.setAttribute("myPosts", postsString);
 	   */
 	   request.setAttribute("profPicUrl", profPicUrls);
-	   request.setAttribute("runsJson", runsJson);
+	   
 	   
 	   RequestDispatcher rd = request.getRequestDispatcher("/results.jsp");  
 	   rd.forward(request,response);  
