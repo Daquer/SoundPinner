@@ -9,11 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
-import com.restfb.types.Post;
 import com.restfb.types.User;
 
 
@@ -29,22 +32,23 @@ public class RecuperaUsuarioFacebook extends HttpServlet {
    
   protected void inicia(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
-	   
+//	  Document doc = Jsoup.connect("https://www.runtastic.com/en/users/jr-cefet/sport-sessions/355090258").get();
+//	  Elements newsHeadlines = doc.select("#mp-itn b a");
 	   
 	   FacebookClient facebookClient = new DefaultFacebookClient(request.getParameter("token"));
 	   User facebookUser = facebookClient.fetchObject("me", User.class);
 	   Connection<User> friendsFB = facebookClient.fetchConnection("me/friends", User.class, Parameter.with("fields", "name, id, picture"));
-	   
+
 	   String friendsRuns = "";
 //	   String runsJson = "{\"data\":[";
 	   String runsJson = "";
 	   String[] profPicUrls = new String[friendsFB.getData().size()];
-		  
+	   String[] ids = new String[friendsFB.getData().size()];
 	   for (int i=0;i < friendsFB.getData().size(); i++) {
 		  //String nome = friendsFB.getData().get(i).getName();
 		  String id = friendsFB.getData().get(i).getId();
+		  ids[i] = id;
 		  profPicUrls[i] = friendsFB.getData().get(i).getPicture() != null ? friendsFB.getData().get(i).getPicture().getUrl() : "imagem/401.png" ;
-		  
 		 
 		  
 		  //JsonObject runsConnection = facebookClient.fetchObject(id + "/fitness.runs", JsonObject.class);
@@ -81,10 +85,12 @@ public class RecuperaUsuarioFacebook extends HttpServlet {
 	   request.setAttribute("friendsNames", friendsName);
 	   request.setAttribute("myPosts", postsString);
 	   */
+	   request.setAttribute("token", request.getParameter("token"));
+	   request.setAttribute("ids", ids);
 	   request.setAttribute("profPicUrl", profPicUrls);
 	   
 	   
-	   RequestDispatcher rd = request.getRequestDispatcher("/results.jsp");  
+	   RequestDispatcher rd = request.getRequestDispatcher("/escolheUsuario.jsp");  
 	   rd.forward(request,response);  
    }
    

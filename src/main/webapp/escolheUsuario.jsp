@@ -13,11 +13,13 @@
 			//out.println("Friends: <br />" + request.getAttribute("friendsNames") + "<br />");
 			//out.println("Posts: <br />" + request.getAttribute("myPosts") + "<br />");
 			String[] profPicUrls= (String[]) request.getAttribute("profPicUrl");
-
+			String[] ids = (String[]) request.getAttribute("ids");
+			String token = (String) request.getAttribute("token");
+					
 			for(int i=0; i < profPicUrls.length;i++) {
 		%> 
 			
-			<a href="RecuperaCorridas?id=<%=request.getAttribute("id")%>" ><img src="<%=profPicUrls[i]%>" /></a>
+			<a href="RecuperaCorridas?id=<%=ids[i]%>&token=<%=token%>&fase=inicio" ><img src="<%=profPicUrls[i]%>" /></a>
 		<%
 			}
 		%>
