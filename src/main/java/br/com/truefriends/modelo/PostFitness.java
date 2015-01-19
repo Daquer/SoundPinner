@@ -8,10 +8,10 @@ import java.util.Date;
 import com.restfb.Facebook;
 import com.restfb.types.Post;
 
+//https://developers.facebook.com/docs/reference/opengraph/action-type/fitness.runs
 public class PostFitness extends Post implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	//https://developers.facebook.com/docs/reference/opengraph/action-type/fitness.runs
 	
 	//verificar a necessidade de campo place
 	

@@ -12,7 +12,7 @@
 <script>
         
  FB.init({
-	  appId  : '749336888463283',
+	  appId  : '749336888463283', //Id do aplicativo ()
 	  status : true, // verifica status do login
 	  cookie : true, // habilita cookies para permitir acesso via servidor
 	  xfbml  : true  // habilita parser XFBML
