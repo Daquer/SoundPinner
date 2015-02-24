@@ -31,6 +31,9 @@ public class PostFitness extends Post implements Serializable {
 	@Facebook("no_feed_story")
 	private boolean noFeedStory;
 	
+	@Facebook("data")
+	private CourseData dataCourse;
+
 	public Date getStartTime() {
 		return toDateFromLongFormat(startTime);
 	}
@@ -49,5 +52,13 @@ public class PostFitness extends Post implements Serializable {
 
 	public boolean isNoFeedStory() {
 		return noFeedStory;
+	}
+	
+	public CourseData getDataCourse() {
+		return dataCourse;
+	}
+	
+	public void setDataCourse(CourseData dataCourse) {
+		this.dataCourse = dataCourse;
 	}
 }

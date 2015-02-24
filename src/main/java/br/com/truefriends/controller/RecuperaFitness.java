@@ -1,6 +1,8 @@
 package br.com.truefriends.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,13 +11,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import br.com.truefriends.modelo.PostFitness;
 
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
-import com.restfb.types.Application;
+import com.restfb.json.JsonObject;
 
 @WebServlet("/RecuperaFitness")
 public class RecuperaFitness extends HttpServlet {
@@ -24,25 +29,101 @@ public class RecuperaFitness extends HttpServlet {
     public RecuperaFitness() {
     }
 
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		inicia(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		inicia(request, response);
+	}
+	
     protected void inicia(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	FacebookClient facebookClient = new DefaultFacebookClient(request.getParameter("token"));
     	String categoria = (String) request.getParameter("categoria");
-    	RequestDispatcher rd = request.getRequestDispatcher("/404.jsp");
+//    	String extractMode = (String) request.getParameter("extract");
     	
-    	if(categoria.equals("runs")) {
-    		 setRunAttributes(facebookClient, request);
-    		 rd = request.getRequestDispatcher("/mostraCorridas.jsp");
+    	String idRun = (String) request.getParameter("idRun");
+    	
+    	RequestDispatcher rd = request.getRequestDispatcher("/404.jsp");
+//    	if(extractMode.equals("graphapi")) {
+    	if(idRun != null && !idRun.equals("")) {
+    		getSingleRun(request, facebookClient, idRun);
+    		rd = request.getRequestDispatcher("/mostraCorridas.jsp");
     	}
     	
+		if(categoria != null && categoria.equals("runs")) {
+//    			setRunAttributesGraphApi(facebookClient, request);
+			setRuns(facebookClient, request);
+			rd = request.getRequestDispatcher("/mostraCorridas.jsp");
+		}
+//    	}
+//    	else if(extractMode.equals("jsoup")) {
+//    		setRunAttributesJsoup(facebookClient, request);
+//    		rd = request.getRequestDispatcher("/nikeRuns.jsp");
+//    	}
+		request.setAttribute("token", request.getParameter("token"));
 		rd.forward(request,response); 
     }
     
-    private void setRunAttributes(FacebookClient facebookClient, HttpServletRequest request) {
-		Connection<PostFitness> runsConnection = facebookClient.fetchConnection(request.getParameter("id") + "/fitness.runs", PostFitness.class, Parameter.with("limit", "1"));
 
-		PostFitness run = runsConnection.getData().get(0);
+
+	private void getSingleRun(HttpServletRequest request, FacebookClient facebookClient, String idRun) {
+		PostFitness run = facebookClient.fetchObject(idRun, PostFitness.class);
+		
+		setRunAttributesGraphApi(request, run);
+	}
+
+
+	private void setRuns(FacebookClient facebookClient,
+			HttpServletRequest request) {
+		Connection<PostFitness> runsConnection = facebookClient.fetchConnection(request.getParameter("id") + "/fitness.runs", PostFitness.class, Parameter.with("limit", "5"));
+		List<PostFitness> postsFit = new ArrayList<PostFitness>();
+		
+		for(PostFitness postFit : runsConnection.getData()) {
+			postsFit.add(postFit);
+		}
+		
+		request.setAttribute("runs", postsFit);
+	}
+
+	private void setRunAttributesJsoup(FacebookClient facebookClient, HttpServletRequest request) {
+		// TODO Auto-generated method stub
+    	Connection<PostFitness> runsConnection = facebookClient.fetchConnection(request.getParameter("id") + "/fitness.runs", PostFitness.class, Parameter.with("limit", "5"));
+    	PostFitness run = runsConnection.getData().get(0);
+    	
+    	String appName = run.getApplication().getName();
+    	String courseUrl = run.getDataCourse().getCourse().getUrl();
+    	
+//    	Document doc = Jsoup.connect("https://www.runtastic.com/en/users/jr-cefet/sport-sessions/355090258").get();
+    	
+    	try {
+			Document doc = Jsoup.connect(courseUrl).get();
+			
+			
+			if(appName.equals("Nike")) {
+//				String nikeFuel = doc.select(".stat-heading.wide.fuel.first span").text() + " " + doc.select(".stat-heading.wide.fuel.first div").text();
+//				String totalDistance = doc.select(".stat-heading.wide.distance span").first().text() + " " + doc.select(".stat-heading.wide.distance span span").text();
+//				String totalTime = doc.select(".stat-heading.wide.time span").text();
+//				String avgPace = doc.select(".stat-heading.wide.pace span").first().text();
+//				
+//				request.setAttribute("nikeFuel", nikeFuel);
+//				request.setAttribute("totalDistance", totalDistance);
+//				request.setAttribute("totalTime", totalTime);
+//				request.setAttribute("avgPace", avgPace);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+	}
+
+
+	private void setRunAttributesGraphApi(HttpServletRequest request, PostFitness run) {
 		
 		request.setAttribute("oRunString", run.toString());
+		request.setAttribute("courseUrl", run.getDataCourse().getCourse().getUrl());
 		request.setAttribute("appName", run.getApplication().getName());
 		request.setAttribute("attribution", run.getAttribution());
 		request.setAttribute("caption", run.getCaption());
@@ -77,12 +158,5 @@ public class RecuperaFitness extends HttpServlet {
 		request.setAttribute("noFeedStory", run.isNoFeedStory() ? "true" : "false");
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		inicia(request, response);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		inicia(request, response);
-	}
 
 }

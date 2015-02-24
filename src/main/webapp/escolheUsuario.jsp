@@ -1,15 +1,8 @@
-<%@ page import="java.util.List" %>
 <% 
-	//out.println("Id: " + request.getAttribute("id_usuario") + "<br />"); 
-	//out.println("Nome: " + request.getAttribute("nome_usuario") + "<br />");
-	//out.println("Email: " + request.getAttribute("email_usuario") + "<br />");
-	//out.println("Data de nascimento: " + request.getAttribute("dtnasc_usuario") + "<br />");
-	//out.println("Number of friends: " + request.getAttribute("friendsCount") + "<br />");
-	//out.println("Friends: <br />" + request.getAttribute("friendsNames") + "<br />");
-	//out.println("Posts: <br />" + request.getAttribute("myPosts") + "<br />");
 	String[] profPicUrls= (String[]) request.getAttribute("profPicUrl");
 	String[] ids = (String[]) request.getAttribute("ids");
 	String token = (String) request.getAttribute("token");
+	String alert = (String) request.getAttribute("alert");
 %>
 
 <html>
@@ -18,7 +11,6 @@
 	<script type="text/javascript">
 		var profile = [];
 		
-	
 		function selectProfile(a) {
 			$("img").css("border", "").css("border-style", "").css("border-width", "");
 			$("#" + a.id).css("border", "blue").css("border-style", "solid").css("border-width", "thin");
@@ -27,13 +19,10 @@
 		}
 		
 		function submitExtract() {
-			if($("#dropDownMenuExtractMode option:selected").index() == 0) 
-				if($("#dropDownMenuFitnessCategory option:selected").index() == 0)
-					window.location = "RecuperaFitness?categoria=" + $("#dropDownMenuFitnessCategory option:selected").val() + "&id=" + profile["fbIdSelected"] + "&token=<%=token%>";
-			else
-				alert("Está opção está sendo implementada. Aguarde...");
-<%-- 				window.location = "RecuperaFitnessJsoup?token=<%=token%>&fase=inicio&id=" + profile["fbIdSelected"] ; --%>
+				window.location = "RecuperaFitness?" + "&categoria=" + $("#dropDownMenuFitnessCategory option:selected").val() + "&id=" + profile["fbIdSelected"] + "&token=<%=token%>";
 		}
+		
+// 		extract=" + $("#dropDownMenuExtractMode option:selected").val()
 	</script>
 	</head>
 	<body>
@@ -47,12 +36,12 @@
 			}
 		%>
 		
-		<div>
-			<select id="dropDownMenuExtractMode">
-				<option>Facebook Graph API</option>
-				<option disabled="disabled">JSOUP</option>
-			</select>
-		</div>
+<!-- 		<div> -->
+<!-- 			<select id="dropDownMenuExtractMode"> -->
+<!-- 				<option value="graphapi">Facebook Graph API</option> -->
+<!-- 				<option value="jsoup" >JSOUP</option> -->
+<!-- 			</select> -->
+<!-- 		</div> -->
 		
 		<div>
 			<select id="dropDownMenuFitnessCategory">

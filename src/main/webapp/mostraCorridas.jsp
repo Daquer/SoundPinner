@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ page import="java.util.List" %>
+<%@ page import="br.com.truefriends.modelo.PostFitness" %>
+<%@ page import="java.util.ArrayList" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,8 +12,11 @@
 </head>
 <body>
 <% 
-String oRunString = (String) request.getAttribute("oRunString");
 
+List<PostFitness> postsFit = (ArrayList<PostFitness>) request.getAttribute("runs");
+String token = (String) request.getAttribute("token");
+
+String courseUrl = (String) request.getAttribute("courseUrl");
 String appName = (String) request.getAttribute("appName");
 String caption = (String) request.getAttribute("caption");
 String commentsCount = (String) request.getAttribute("commentsCount");
@@ -42,41 +49,50 @@ String updatedTime = (String) request.getAttribute("updatedTime");
 String withTags = (String) request.getAttribute("withTags");
 String noFeedStory = (String) request.getAttribute("noFeedStory");
 
-out.println("Run object String: <br /><br />" + oRunString + "<br /><br />");
+if(postsFit !=null) {
+	for(int i = 0 ; i < postsFit.size(); i++) {
+		out.println("<a href=\"RecuperaFitness?idRun=" + postsFit.get(i).getId() + "&token=" + token + "\" > Corrida " + (i + 1) + "</a><br />");
+	}
+} 
+// String oRunString = (String) request.getAttribute("oRunString");
 
-out.println("<b>App: </b>" + appName + "<br /><br />");
-out.println("<b>Caption: </b>" + caption + "<br /><br />");
-out.println("<b>commentsCount: </b>" + commentsCount + "<br /><br />");
-out.println("<b>createdTime: </b>" + createdTime + "<br /><br />");
-out.println("<b>description: </b>" + description + "<br /><br />");
-out.println("<b>endTime: </b>" + endTime + "<br /><br />");
-out.println("<b>profileNameFrom: </b>" + profileNameFrom + "<br /><br />");
-out.println("<b>icon: </b>" + icon + "<br /><br />");
-out.println("<b>fbObjectId: </b>" + fbObjectId + "<br /><br />");
-out.println("<b>likesCount: </b>" + likesCount + "<br /><br />");
-out.println("<b>link: </b>" + link + "<br /><br />");
-out.println("<b>message: </b>" + message + "<br /><br />");
-out.println("<b>messageTags: </b>" + messageTags + "<br /><br />");
-out.println("<b>metadata: </b>" + metadata + "<br /><br />");
-out.println("<b>postName: </b>" + postName + "<br /><br />");
-out.println("<b>objectId: </b>" + objectId + "<br /><br />");
-out.println("<b>picture: </b>" + picture + "<br /><br />");
-out.println("<b>place: </b>" + place + "<br /><br />");
-out.println("<b>privacy: </b>" + privacy + "<br /><br />");
-out.println("<b>properties: </b>" + properties + "<br /><br />");
-out.println("<b>publishTime: </b>" + publishTime + "<br /><br />");
-out.println("<b>sharesCount: </b>" + sharesCount + "<br /><br />");
-out.println("<b>source: </b>" + source + "<br /><br />");
-out.println("<b>startTime: </b>" + startTime + "<br /><br />");
-out.println("<b>statusType: </b>" + statusType + "<br /><br />");
-out.println("<b>story: </b>" + story + "<br /><br />");
-out.println("<b>to: </b>" + to + "<br /><br />");
-out.println("<b>postType: </b>" + postType + "<br /><br />");
-out.println("<b>updatedTime: </b>" + updatedTime + "<br /><br />");
-out.println("<b>withTags: </b>" + withTags + "<br /><br />");
-out.println("<b>noFeedStory: </b>" + noFeedStory + "<br /><br />");
+// 
 %>
 
-
+<%-- Run object String: <br /><br /><%=oRunString%><br /><br /> --%>
+<%if(postsFit ==null) { %>
+	<a href="<%=courseUrl%>"><%=courseUrl%></a><br /><br />
+	<b>App: </b><%=appName%><br /><br /> 
+	<b>Caption: </b><%=caption%><br /><br /> 
+	<b>commentsCount: </b><%=commentsCount%><br /><br /> 
+	<b>createdTime: </b><%=createdTime%><br /><br /> 
+	<b>description: </b><%=description%><br /><br /> 
+	<b>endTime: </b><%=endTime%><br /><br /> 
+	<b>profileNameFrom: </b><%=profileNameFrom%><br /><br /> 
+	<b>icon: </b><%=icon%><br /><br /> 
+	<b>fbObjectId: </b><%=fbObjectId%><br /><br /> 
+	<b>likesCount: </b><%=likesCount%><br /><br /> 
+	<b>link: </b><%=link%><br /><br /> 
+	<b>message: </b><%=message%><br /><br /> 
+	<b>messageTags: </b><%=messageTags%><br /><br /> 
+	<b>metadata: </b><%=metadata%><br /><br /> 
+	<b>postName: </b><%=postName%><br /><br /> 
+	<b>objectId: </b><%=objectId%><br /><br /> 
+	<b>picture: </b><%=picture%><br /><br /> 
+	<b>place: </b><%=place%><br /><br /> 
+	<b>privacy: </b><%=privacy%><br /><br /> 
+	<b>properties: </b><%=properties%><br /><br /> 
+	<b>publishTime: </b><%=publishTime%><br /><br /> 
+	<b>sharesCount: </b><%=sharesCount%><br /><br /> 
+	<b>source: </b><%=source%><br /><br /> 
+	<b>startTime: </b><%=startTime%><br /><br /> 
+	<b>statusType: </b><%=statusType%><br /><br /> 
+	<b>story: </b><%=story%><br /><br /> 
+	<b>to: </b><%=to%><br /><br /> 
+	<b>postType: </b><%=postType%><br /><br /> 
+	<b>updatedTime: </b><%=updatedTime%><br /><br /> 
+	<b>withTags: </b><%=withTags%><br /><br /> 
+	<b>noFeedStory: </b><%=noFeedStory%><br /><br /> 
+<%} %>
 </body>
 </html>
