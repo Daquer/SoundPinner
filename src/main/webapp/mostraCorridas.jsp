@@ -12,8 +12,6 @@
 </head>
 <body>
 <% 
-
-List<PostFitness> postsFit = (ArrayList<PostFitness>) request.getAttribute("runs");
 String token = (String) request.getAttribute("token");
 
 String courseUrl = (String) request.getAttribute("courseUrl");
@@ -49,6 +47,10 @@ String updatedTime = (String) request.getAttribute("updatedTime");
 String withTags = (String) request.getAttribute("withTags");
 String noFeedStory = (String) request.getAttribute("noFeedStory");
 
+List<PostFitness> postsFit = (ArrayList<PostFitness>) request.getAttribute("runs");
+
+String jsoupExtraction = (String) request.getAttribute("jsoupExtraction");
+
 if(postsFit !=null) {
 	for(int i = 0 ; i < postsFit.size(); i++) {
 		out.println("<a href=\"RecuperaFitness?idRun=" + postsFit.get(i).getId() + "&token=" + token + "\" > Corrida " + (i + 1) + "</a><br />");
@@ -60,8 +62,9 @@ if(postsFit !=null) {
 %>
 
 <%-- Run object String: <br /><br /><%=oRunString%><br /><br /> --%>
-<%if(postsFit ==null) { %>
+<%if(postsFit ==null && jsoupExtraction==null) { %>
 	<a href="<%=courseUrl%>"><%=courseUrl%></a><br /><br />
+	<button onclick="window.location = 'RecuperaFitness?token=<%=token%>&jsoup=true&id=<%=fbObjectId%>'" >Jsoup this Course!</button><br /><br />
 	<b>App: </b><%=appName%><br /><br /> 
 	<b>Caption: </b><%=caption%><br /><br /> 
 	<b>commentsCount: </b><%=commentsCount%><br /><br /> 
@@ -93,6 +96,8 @@ if(postsFit !=null) {
 	<b>updatedTime: </b><%=updatedTime%><br /><br /> 
 	<b>withTags: </b><%=withTags%><br /><br /> 
 	<b>noFeedStory: </b><%=noFeedStory%><br /><br /> 
+<%} else if (jsoupExtraction!=null) {%>
+	<%=jsoupExtraction %>
 <%} %>
 </body>
 </html>

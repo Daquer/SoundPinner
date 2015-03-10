@@ -41,12 +41,10 @@ public class RecuperaFitness extends HttpServlet {
     protected void inicia(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	FacebookClient facebookClient = new DefaultFacebookClient(request.getParameter("token"));
     	String categoria = (String) request.getParameter("categoria");
-//    	String extractMode = (String) request.getParameter("extract");
-    	
+    	String jsoupParam = (String) request.getParameter("jsoup");
     	String idRun = (String) request.getParameter("idRun");
     	
     	RequestDispatcher rd = request.getRequestDispatcher("/404.jsp");
-//    	if(extractMode.equals("graphapi")) {
     	if(idRun != null && !idRun.equals("")) {
     		getSingleRun(request, facebookClient, idRun);
     		rd = request.getRequestDispatcher("/mostraCorridas.jsp");
@@ -57,11 +55,10 @@ public class RecuperaFitness extends HttpServlet {
 			setRuns(facebookClient, request);
 			rd = request.getRequestDispatcher("/mostraCorridas.jsp");
 		}
-//    	}
-//    	else if(extractMode.equals("jsoup")) {
-//    		setRunAttributesJsoup(facebookClient, request);
-//    		rd = request.getRequestDispatcher("/nikeRuns.jsp");
-//    	}
+    	if(jsoupParam != null && jsoupParam.equals("true")) {
+    		setRunAttributesJsoup(facebookClient, request);
+    		rd = request.getRequestDispatcher("/mostraCorridas.jsp");
+    	}
 		request.setAttribute("token", request.getParameter("token"));
 		rd.forward(request,response); 
     }
@@ -89,28 +86,76 @@ public class RecuperaFitness extends HttpServlet {
 
 	private void setRunAttributesJsoup(FacebookClient facebookClient, HttpServletRequest request) {
 		// TODO Auto-generated method stub
-    	Connection<PostFitness> runsConnection = facebookClient.fetchConnection(request.getParameter("id") + "/fitness.runs", PostFitness.class, Parameter.with("limit", "5"));
-    	PostFitness run = runsConnection.getData().get(0);
+    	PostFitness run = facebookClient.fetchObject(request.getParameter("id"), PostFitness.class);
+//    	PostFitness run = runsConnection.getData().get(0);
     	
     	String appName = run.getApplication().getName();
     	String courseUrl = run.getDataCourse().getCourse().getUrl();
-    	
-//    	Document doc = Jsoup.connect("https://www.runtastic.com/en/users/jr-cefet/sport-sessions/355090258").get();
     	
     	try {
 			Document doc = Jsoup.connect(courseUrl).get();
 			
 			
-			if(appName.equals("Nike")) {
-//				String nikeFuel = doc.select(".stat-heading.wide.fuel.first span").text() + " " + doc.select(".stat-heading.wide.fuel.first div").text();
-//				String totalDistance = doc.select(".stat-heading.wide.distance span").first().text() + " " + doc.select(".stat-heading.wide.distance span span").text();
-//				String totalTime = doc.select(".stat-heading.wide.time span").text();
-//				String avgPace = doc.select(".stat-heading.wide.pace span").first().text();
-//				
-//				request.setAttribute("nikeFuel", nikeFuel);
-//				request.setAttribute("totalDistance", totalDistance);
-//				request.setAttribute("totalTime", totalTime);
-//				request.setAttribute("avgPace", avgPace);
+			if(appName.equals("Runtastic.com")) {
+				String distance = doc.select(".value.distance").text();
+				String duration = doc.select(".value.duration").text();
+				String avgPace = doc.select(".value.avg_pace").text();
+				String elevationGain = doc.select(".value.elevation_gain").text();
+				String calories = doc.select(".value.calories").text();
+				String heart_rate = doc.select(".value.heart_rate").text();
+				String maxHeartRate = doc.select(".additional.value.max_heart_rate").text();
+				String weather = doc.select(".add_info_icons>div:nth-of-type(1)").attr("title");
+				String celsiusDegrees = doc.select(".add_info_icons>p").text();
+				String placeKind = doc.select(".add_info_icons>div:nth-of-type(2)").attr("title");
+				String evaluation = doc.select(".add_info_icons>div:nth-of-type(3)").attr("title");
+				String avgSpeed = doc.select(".row.avg_speed>.value").text();
+				
+				String redLineHeartRate = doc.select(".zone.red_line>.value>.distance").text();
+				String redLineHeartRateDuration = doc.select(".zone.red_line>.value>.duration").text();
+				
+				String anaerobicHeartRate = doc.select(".zone.anaerobic>.value>.distance").text();
+				String anaerobicHeartRateDuration = doc.select(".zone.anaerobic>.value>.duration").text();
+				
+				String aerobicHeartRate = doc.select(".zone.aerobic>.value>.distance").text();
+				String aerobicHeartRateDuration = doc.select(".zone.aerobic>.value>.duration").text();
+				
+				String fatBurningHeartRate = doc.select(".zone.fat_burning>.value>.distance").text();
+				String fatBurningHeartRateDuration = doc.select(".zone.fat_burning>.value>.duration").text();
+				
+				String easyHeartRate = doc.select(".zone.easy>.value>.distance").text();
+				String easyHeartRateDuration = doc.select(".zone.easy>.value>.duration").text();
+				
+				String noZoneHeartRate = doc.select(".zone.no_zone>.value>.distance").text();
+				String noZoneHeartRateDuration = doc.select(".zone.no_zone>.value>.duration").text();
+				
+				
+				request.setAttribute("jsoupExtraction",
+				"distance -> " + distance + "<br />" + 
+				"duration -> " + duration + "<br />" + 
+				"avgPace -> " + avgPace + "<br />" + 
+				"elevationGain -> " + elevationGain + "<br />" + 
+				"calories -> " + calories + "<br />" + 
+				"heart_rate -> " + heart_rate + "<br />" + 
+				"maxHeartRate -> " + maxHeartRate + "<br />" + 
+				"weather -> " + weather + "<br />" + 
+				"celsiusDegrees -> " + celsiusDegrees + "<br />" + 
+				"placeKind -> " + placeKind + "<br />" + 
+				"evaluation -> " + evaluation + "<br />" + 
+				"avgSpeed -> " + avgSpeed + "<br />" + 
+				"redLineHeartRate -> " + redLineHeartRate + "<br />" + 
+				"redLineHeartRateDuration -> " + redLineHeartRateDuration + "<br />" + 
+				"anaerobicHeartRate -> " + anaerobicHeartRate + "<br />" + 
+				"anaerobicHeartRateDuration -> " + anaerobicHeartRateDuration + "<br />" + 
+				"aerobicHeartRate -> " + aerobicHeartRate + "<br />" + 
+				"aerobicHeartRateDuration -> " + aerobicHeartRateDuration + "<br />" + 
+				"fatBurningHeartRate -> " + fatBurningHeartRate + "<br />" + 
+				"fatBurningHeartRateDuration -> " + fatBurningHeartRateDuration + "<br />" + 
+				"easyHeartRate -> " + easyHeartRate + "<br />" + 
+				"easyHeartRateDuration -> " + easyHeartRateDuration + "<br />" + 
+				"noZoneHeartRate -> " + noZoneHeartRate + "<br />" + 
+				"noZoneHeartRateDuration -> " + noZoneHeartRateDuration
+				);
+				
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
