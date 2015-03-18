@@ -9,9 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import br.com.truefriends.modelo.Usuario;
+import br.com.truefriends.service.UsuarioServico;
 
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
@@ -71,10 +70,10 @@ public class RecuperaUsuarioFacebook extends HttpServlet {
 	   }
 //	   runsJson = runsJson + "]}";
 	   
-//	   Usuario usuario = new Usuario();
-//	   
-//	   UsuarioServico usuarioServico = new UsuarioServico();
-//	   usuario = usuarioServico.persisteUsuarioServico(facebookUser);
+	   Usuario usuario = new Usuario();
+	   
+	   UsuarioServico usuarioServico = new UsuarioServico();
+	   usuario = usuarioServico.persisteUsuarioServico(facebookUser);
        
 	   
 //	   request.setAttribute("nome_usuario", usuario.getNome());

@@ -203,5 +203,6 @@ public class RecuperaFitness extends HttpServlet {
 		request.setAttribute("noFeedStory", run.isNoFeedStory() ? "true" : "false");
 	}
 
+	
 
 }
